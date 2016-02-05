@@ -30,10 +30,17 @@ class Currency
     if @code == other.code
       return @amount + other.amount
     else
-      raise DifferentCurrencyCodeError, "Can't add together"
+      raise DifferentCurrencyCodeError, "Can't add different currencies directly"
     end
   end
 
+  def -(other)
+    if @code == other.code
+      return @amount - other.amount
+    else
+      raise DifferentCurrencyCodeError, "Can't subtract different currencies directly"
+    end
+  end
 
   # def method that lets you mutliply * by a float
   # end
@@ -48,6 +55,7 @@ begin
   puts wad1 == wad2
 ensure
   puts wad1 + wad2
+  puts wad1 - wad2
 end
 # # method
 # # 5usd * 2 = 10usd, not ¥
