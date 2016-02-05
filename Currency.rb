@@ -4,76 +4,108 @@ class DifferentCurrencyCodeError < StandardError
 end
 
 class Currency
-  def initialize (amount, code="")
+  def initialize (amount, symbol="")
     @amount = amount
     #if @amount contains a code, parse out code
-    @code = code
+    @symbol = symbol
+    @code = {"$" => "USD", "¥" => "JPY", "£" => "GBP", "€" => "EUR", }
   end
 
   def amount
     @amount
   end
 
-  def code
-    @code
+  def symbol
+    @symbol
+  end
+
+  def symbol_to_code
+    return @code[@symbol]
   end
 
   def ==(other)
-    if @code == other.code && @amount == other.amount
+    if @symbol == other.symbol && @amount == other.amount
       return true
     else
-      raise DifferentCurrencyCodeError, "Not equal"
+      raise DifferentCurrencyCodeError, "These amounts and/or currencies are not equal"
       return false
     end
   end
 
   def +(other)
-    if @code == other.code
-      return @amount + other.amount
+    if @symbol == other.symbol
+      return Currency.new(@amount + other.amount, @symbol)
     else
-      raise DifferentCurrencyCodeError, "Can't add different currencies directly"
+      raise DifferentCurrencyCodeError, "Can't directly add different currencies"
     end
   end
 
   def -(other)
-    if @code == other.code
-      return @amount - other.amount
+    if @symbol == other.symbol
+      return Currency.new(@amount - other.amount, @symbol)
     else
-      raise DifferentCurrencyCodeError, "Can't subtract different currencies directly"
+      raise DifferentCurrencyCodeError, "Can't directly subtract different currencies"
     end
   end
 
   def *(multiplier)
-      return Currency.new(@amount * multiplier, @code)
+      return Currency.new(@amount * multiplier, @symbol)
   end
 
 end
 
-loop do
-  puts "Input amount:"
-  input_amount = gets.chomp
-  puts "Input code:"
-  input_code = gets.chomp
-
-  if input_amount.to_i == 0
-    values = input_amount.split ""
-    if values[0].to_i == 0
-      input_amount = values[1..-1]
-      input_code = values[0]
-    end
-    puts "Amount is #{input_amount}, Code is #{input_code}"
-  end
-  break
+puts "Enter amount:"
+input_amount = gets.chomp
+if input_amount[0].to_i == 0
+  input_symbol = input_amount[0]
+  input_amount = input_amount[1..-1]
+else
+  puts "Enter currency symbol:"
+  input_symbol = gets.chomp
 end
+
+puts "Amount is #{input_amount}, Symbol is #{input_symbol}"
+
+wad1 = Currency.new(input_amount.to_i, input_symbol)
+puts wad1.symbol_to_code
+
+new_wad = wad1 * 5.25
+puts new_wad.amount
+
+
+puts "Enter amount:"
+input_amount2 = gets.chomp
+if input_amount2[0].to_i == 0
+  input_symbol2 = input_amount2[0]
+  input_amount2 = input_amount2[1..-1]
+else
+  puts "Enter currency symbol:"
+  input_symbol2 = gets.chomp
+end
+
+puts "Amount is #{input_amount2}, Code is #{input_symbol2}"
+
+wad2 = Currency.new(input_amount2.to_i, input_symbol2)
+
+
+
+
+
+  # if input_amount.to_i == 0
+  #   values = input_amount.split ""
+  #   if values[0].to_i == 0
+  #     input_amount = values[1..-1]
+  #     input_code = values[0]
+  #   end
+  #   puts "Amount is #{input_amount}, Code is #{input_code}"
+  # end
+
 
 # puts input_amount.to_s
 # puts input_amount.to_i
 
 
 
-
-#
-# wad1 = Currency.new(input_amount, input_code)
 #
 # # Currency.new should be able to take one argument with a currency
 # # symbol embedded in it, like "$1.20" or "€ 7.00",
@@ -81,9 +113,6 @@ end
 # # It can also take two arguments like before,
 # # one being the amount and the other being the currency code.
 #
-# wad1 = Currency.new(3, "$")
-# wad2 = Currency.new(3, "$")
-# puts "You have #{wad1.amount}#{wad1.code}"
 #
 # puts wad1 == wad2
 # multiplied = wad1 * 3.5
