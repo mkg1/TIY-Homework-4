@@ -21,24 +21,34 @@ class Currency
     if @code == other.code && @amount == other.amount
       return true
     else
-      raise DifferentCurrencyCodeError, "Wrrrrong"
+      raise DifferentCurrencyCodeError, "Not equal"
       return false
     end
   end
-  #
+
+  def +(other)
+    if @code == other.code
+      return @amount + other.amount
+    else
+      raise DifferentCurrencyCodeError, "Can't add together"
+    end
+  end
+
 
   # def method that lets you mutliply * by a float
   # end
 end
 
-#currency code && amount must be the same
 
 wad1 = Currency.new(2, "$")
 wad2 = Currency.new(1, "$")
 puts "You have #{wad1.amount}#{wad1.code}"
-
-puts wad1 == wad2
-
+#puts wad1 + wad2
+begin
+  puts wad1 == wad2
+ensure
+  puts wad1 + wad2
+end
 # # method
 # # 5usd * 2 = 10usd, not ¥
 # #
