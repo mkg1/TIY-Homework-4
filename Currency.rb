@@ -1,5 +1,8 @@
 require 'byebug'
 
+class DifferentCurrencyCodeError < StandardError
+end
+
 class Currency
   def initialize (amount, code)
     @amount = amount
@@ -18,6 +21,7 @@ class Currency
     if @code == other.code && @amount == other.amount
       return true
     else
+      raise DifferentCurrencyCodeError, "Wrrrrong"
       return false
     end
   end
@@ -29,7 +33,7 @@ end
 
 #currency code && amount must be the same
 
-wad1 = Currency.new(1, "$")
+wad1 = Currency.new(2, "$")
 wad2 = Currency.new(1, "$")
 puts "You have #{wad1.amount}#{wad1.code}"
 
