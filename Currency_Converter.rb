@@ -1,28 +1,30 @@
+require "./Currency"
+class UnknownCurrencyCodeError < StandardError
+end
+
 class CurrencyConverter
-  def initialize(rates)
-    @rate = rates
+  def initialize(rate)
+    @rate = rate
   end
 
   def rate
-    @rates
+    @rate
   end
 
   def convert(original_currency, convert_to)
-    puts original_currency.amount
-    puts original_currency.symbol
-    puts original_currency.amount * @rate[convert_to]
+    puts "You are starting with #{original_currency.amount} #{original_currency.symbol}"
+    if !@rate.include?(convert_to)
+       raise UnknownCurrencyCodeError, "Not familiar with #{convert_to}. Please only use valid currency codes."
+       return false
+    elsif !@rate.include?(original_currency.symbol)
+      raise UnknownCurrencyCodeError, "Not familiar with #{original_currency.symbol}. Please only use valid currency codes."
+      return false
+    elsif original_currency.symbol != :USD
+       foreign_conversion = original_currency.amount * ((@rate[convert_to]/@rate[original_currency.symbol]))
+       puts  "The exchange rate for #{original_currency.symbol} to #{convert_to} is #{@rate[convert_to]}/#{@rate[original_currency.symbol]}. You should get back #{foreign_conversion}"
+    else
+      puts "The exchange rate is #{@rate[convert_to]} #{convert_to} to 1 #{original_currency.symbol} so you'll get back #{original_currency.amount * @rate[convert_to]} #{convert_to}"
+    end
   end
-  #takes in currency $5usd, takes in code, ¥, gives back currency object with ¥ amount
-end
 
-# yen = Converter.new({1: "fdlsfkd", 2: "kfdla;fj"})
-#
-#
-#
-# Should be able to take a Currency object and a requested currency code that is the same currency code as the Currency object's and return a Currency object equal to the one passed in (that is, currency_converter.convert(Currency.new(1, :USD), :USD) == Currency.new(1, :USD))
-# Should be able to take a Currency object that has one currency code it knows and a requested currency code and return a new Currency object with the right amount in the new currency code
-# Should be able to be created with a Hash of three or more currency codes and conversion rates. An example would be this: {USD: 1.0, EUR: 0.74, JPY: 120.0}, which implies that a dollar is worth 0.74 euros and that a dollar is worth 120 yen, but also that a euro is worth 120/0.74 = 162.2 yen.
-# Should be able to convert Currency in any currency code it knows about to Currency in any other currency code it knows about.
-# Should raise an UnknownCurrencyCodeError when you try to convert from or to a currency code it doesn't know about.
-#
-# every time you call converter.new, you should have to give it the rates
+end
