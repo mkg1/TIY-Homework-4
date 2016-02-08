@@ -1,7 +1,3 @@
-require "./Currency"
-class UnknownCurrencyCodeError < StandardError
-end
-
 class CurrencyConverter
   def initialize(rate)
     @rate = rate
@@ -12,19 +8,18 @@ class CurrencyConverter
   end
 
   def convert(original_currency, convert_to)
-    puts "You are starting with #{original_currency.amount} #{original_currency.symbol}"
     if !@rate.include?(convert_to)
-       raise UnknownCurrencyCodeError, "Not familiar with #{convert_to}. Please only use valid currency codes."
-       return false
+      raise UnknownCurrencyCodeError, "Not familiar with #{convert_to}. Please only use valid currency codes."
+      return false
     elsif !@rate.include?(original_currency.symbol)
       raise UnknownCurrencyCodeError, "Not familiar with #{original_currency.symbol}. Please only use valid currency codes."
       return false
     elsif original_currency.symbol != :USD
-       foreign_conversion = original_currency.amount * ((@rate[convert_to]/@rate[original_currency.symbol]))
-       puts  "The exchange rate for #{original_currency.symbol} to #{convert_to} is #{@rate[convert_to]}/#{@rate[original_currency.symbol]}. You should get back #{foreign_conversion}"
+      foreign_conversion = original_currency.amount * ((@rate[convert_to]/@rate[original_currency.symbol]))
+      puts  "You are starting with #{original_currency.amount} #{original_currency.symbol}. The exchange rate for #{original_currency.symbol} to #{convert_to} is #{@rate[convert_to]}/#{@rate[original_currency.symbol]} so you should get back #{foreign_conversion}"
     else
-      puts "The exchange rate is #{@rate[convert_to]} #{convert_to} to 1 #{original_currency.symbol} so you'll get back #{original_currency.amount * @rate[convert_to]} #{convert_to}"
+      puts "You are starting with #{original_currency.amount} #{original_currency.symbol}. The exchange rate is #{@rate[convert_to]} #{convert_to} to 1 #{original_currency.symbol} so you'll get back #{original_currency.amount * @rate[convert_to]} #{convert_to}"
     end
   end
-
+  
 end
